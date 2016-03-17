@@ -1,0 +1,51 @@
+#!/bin/bash
+# Wifi
+# Wifi Tool Set from command line
+
+wifi() # make the software run as a function
+{
+
+tput clear # clear the terminal
+
+printf "\n\033[1;32mWelcome to Scan Analyser Set\033[0m\n"
+printf "\n\033[1;32mSAS need you to use the sudo command to run\033[0m\n"
+
+
+the_user=`whoami`
+the_machine=`hostname`
+ip=`ip a | grep inet | grep 192`
+network=`ip addr show | awk '/inet.*brd/{print $NF; exit}'`
+
+
+# searching name of the active interface
+printf "\n\033[1;32mHere is your network interface: $network\033[0m\n\n"
+
+# catching wifi network arround
+sudo iwlist $network s | grep 'ESSID\|IEEE' | tee -a /home/$the_user/wifi-ts/wifi-report-network-arround-$the_user
+printf "\n\033[1;32mHere is the wifi network arround your $the_user\033[0m\n\n"
+
+# load traffic analysis
+echo "Analysing now your traffic that will take 20 seconds"
+sudo iftop -i $network -ts 20 | tee -a /home/$the_user/wifi-ts/wifi-report-traffic-analysis
+# 20 number of second of analyse
+# print hostname of the current machine
+printf "\n\033[1;32mYour hostname is: $the_machine\033[0m\n\n" | tee -a /home/$the_user/wifi-ts/wifi-report-$the_user-hostname
+# print IP of the machine
+printf "\n\033[1;32mYour IP is: $ip\033[0m\n\n" | tee -a /home/$the_user/wifi-ts/wifi-report-$the_user-IP
+
+# scan active connection
+printf "\n\033[1;32mscanning active Internet connections from $the_user\033[0m\n\n"
+sudo netstat -natpe | tee -a /home/$the_user/wifi-ts/wifi-report-$the_user-active-Internet-connections
+
+# print neighborwood
+printf "\n\033[1;32mThere is different machine arround you:\033[0m\n"
+ip neighbor | tee -a /home/$the_user/wifi-ts/wifi-report-$the_user-neighborwood
+printf "\n"
+
+# scan a server
+printf "\n\033[1;32mgive me the name or ip of a machine you want to scan deeper:\033[0m\n"
+read name
+scan=`sudo nmap -p- -Pn -v -O --osscan-guess $name | grep -v Starting`
+printf "\n$scan\n\n" | tee -a /home/$the_user/wifi-ts/wifi-report-scan-on-$name
+
+}
