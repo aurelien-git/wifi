@@ -2,6 +2,8 @@
 # Wifi
 # A wifi tool set from command line
 # Configuration file
+# License: GPL v2 or later
+# Author: Aurelien DESBRIERES - aurelien@hackers.camp
 
 tput clear
 
@@ -53,7 +55,7 @@ fi
 
 mkdir /home/$the_user/wifi-ts/
 
-cp wifi ~/wifi-ts/
+cp wifi scan.awk ~/wifi-ts/
 
 chmod u+x ~/wifi-ts/wifi
 

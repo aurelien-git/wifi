@@ -1,6 +1,9 @@
 #!/bin/bash
 # Wifi
 # Wifi Tool Set from command line
+# License: GPL v2 or later
+# Author: Aurelien DESBRIERES - aurelien@hackers.camp
+
 
 wifi() # make the software run as a function
 {
@@ -20,14 +23,21 @@ network=`ip addr show | awk '/inet.*brd/{print $NF; exit}'`
 # searching name of the active interface
 printf "\n\033[1;32mHere is your network interface: $network\033[0m\n\n"
 
+# search available network arround
+printf "\n\033[1;32mHere is the list of available network arround you $the_user\033[0m\n\n"
+sudo iw $network scan | awk -f scan.awk | tee -a /home/$the_user/wifi-ts/wifi-report-network-list
+
 # catching wifi network arround
+printf "\n\033[1;32mCloser information on that wifi network around:\033[0m\n\n"
 sudo iwlist $network s | grep 'ESSID\|IEEE' | tee -a /home/$the_user/wifi-ts/wifi-report-network-arround-$the_user
-printf "\n\033[1;32mHere is the wifi network arround your $the_user\033[0m\n\n"
+
 
 # load traffic analysis
-echo "Analysing now your traffic that will take 20 seconds"
+printf "\n\033[1;32mCloser information on your interface:\033[0m\n\n"
 sudo iftop -i $network -ts 20 | tee -a /home/$the_user/wifi-ts/wifi-report-traffic-analysis
 # 20 number of second of analyse
+echo "Analysing now your traffic that will take 20 seconds"
+
 # print hostname of the current machine
 printf "\n\033[1;32mYour hostname is: $the_machine\033[0m\n\n" | tee -a /home/$the_user/wifi-ts/wifi-report-$the_user-hostname
 # print IP of the machine
@@ -38,7 +48,7 @@ printf "\n\033[1;32mscanning active Internet connections from $the_user\033[0m\n
 sudo netstat -natpe | tee -a /home/$the_user/wifi-ts/wifi-report-$the_user-active-Internet-connections
 
 # print neighborwood
-printf "\n\033[1;32mThere is different machine arround you:\033[0m\n"
+printf "\n\033[1;32mThere is different machine in your network:\033[0m\n"
 ip neighbor | tee -a /home/$the_user/wifi-ts/wifi-report-$the_user-neighborwood
 printf "\n"
 
