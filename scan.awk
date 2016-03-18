@@ -1,8 +1,7 @@
 # scan.awk
 # Wifi
 # Wifi Tool Set from command line
-# License: GPL v2 or later
-# Author: Aurelien DESBRIERES - aurelien@hackers.camp
+
 
 $1 == "BSS" {
         MAC = $2
