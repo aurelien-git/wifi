@@ -1,4 +1,5 @@
 # Wifi - A wifi tools set
+GPLv2 or later - aurelien@hackers.camp - Aurelien DESBRIERES
 
 Wifi tools set from command line
 
